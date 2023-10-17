@@ -901,6 +901,7 @@ filename_absolute.o: ../FL/fl_casts.H
 filename_absolute.o: ../FL/fl_config.h
 filename_absolute.o: ../FL/Fl_Export.H
 filename_absolute.o: ../FL/Fl_Preferences.H
+filename_absolute.o: ../FL/Fl_String.H
 filename_absolute.o: ../FL/fl_string_functions.h
 filename_absolute.o: ../FL/fl_types.h
 filename_absolute.o: ../FL/fl_utf8.h
@@ -1270,6 +1271,7 @@ Fl_Button.o: ../FL/Fl_Button.H
 Fl_Button.o: ../FL/Fl_Cairo.H
 Fl_Button.o: ../FL/fl_casts.H
 Fl_Button.o: ../FL/fl_config.h
+Fl_Button.o: ../FL/fl_draw.H
 Fl_Button.o: ../FL/Fl_Export.H
 Fl_Button.o: ../FL/Fl_Group.H
 Fl_Button.o: ../FL/Fl_Image.H
@@ -2236,6 +2238,11 @@ Fl_Graphics_Driver.o: ../FL/platform.H
 Fl_Graphics_Driver.o: ../FL/platform_types.h
 Fl_Graphics_Driver.o: ../FL/x11.H
 Fl_Graphics_Driver.o: Fl_Screen_Driver.H
+Fl_Grid.o: ../FL/fl_draw.H
+Fl_Grid.o: ../FL/Fl_Grid.H
+Fl_Grid.o: ../FL/Fl_Group.H
+Fl_Grid.o: ../FL/Fl_Rect.H
+Fl_Grid.o: ../FL/Fl_Widget.H
 Fl_Group.o: ../FL/Enumerations.H
 Fl_Group.o: ../FL/Fl.H
 Fl_Group.o: ../FL/fl_attr.h
@@ -3875,6 +3882,7 @@ Fl_Table_Row.o: ../FL/platform_types.h
 Fl_Tabs.o: ../FL/Enumerations.H
 Fl_Tabs.o: ../FL/Fl.H
 Fl_Tabs.o: ../FL/fl_attr.h
+Fl_Tabs.o: ../FL/Fl_Bitmap.H
 Fl_Tabs.o: ../FL/Fl_Cairo.H
 Fl_Tabs.o: ../FL/fl_casts.H
 Fl_Tabs.o: ../FL/fl_config.h
@@ -3888,6 +3896,7 @@ Fl_Tabs.o: ../FL/Fl_Tooltip.H
 Fl_Tabs.o: ../FL/fl_types.h
 Fl_Tabs.o: ../FL/fl_utf8.h
 Fl_Tabs.o: ../FL/Fl_Widget.H
+Fl_Tabs.o: ../FL/Fl_Window.H
 Fl_Tabs.o: ../FL/platform_types.h
 Fl_Text_Buffer.o: ../config.h
 Fl_Text_Buffer.o: ../FL/Enumerations.H

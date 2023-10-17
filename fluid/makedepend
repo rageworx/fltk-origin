@@ -25,6 +25,7 @@ about_panel.o: ../FL/Fl_Window.H
 about_panel.o: ../FL/platform_types.h
 about_panel.o: ../src/flstring.h
 about_panel.o: about_panel.h
+alignment_panel.o: ../config.h
 alignment_panel.o: ../FL/Enumerations.H
 alignment_panel.o: ../FL/filename.H
 alignment_panel.o: ../FL/Fl.H
@@ -72,6 +73,7 @@ alignment_panel.o: ../FL/Fl_RGB_Image.H
 alignment_panel.o: ../FL/Fl_Scheme.H
 alignment_panel.o: ../FL/Fl_Scheme_Choice.H
 alignment_panel.o: ../FL/Fl_Scrollbar.H
+alignment_panel.o: ../FL/Fl_Shortcut_Button.H
 alignment_panel.o: ../FL/Fl_Simple_Terminal.H
 alignment_panel.o: ../FL/Fl_Slider.H
 alignment_panel.o: ../FL/Fl_Spinner.H
@@ -80,6 +82,7 @@ alignment_panel.o: ../FL/fl_string_functions.h
 alignment_panel.o: ../FL/Fl_Tabs.H
 alignment_panel.o: ../FL/Fl_Text_Buffer.H
 alignment_panel.o: ../FL/Fl_Text_Display.H
+alignment_panel.o: ../FL/Fl_Text_Editor.H
 alignment_panel.o: ../FL/Fl_Tile.H
 alignment_panel.o: ../FL/Fl_Tooltip.H
 alignment_panel.o: ../FL/fl_types.h
@@ -90,6 +93,7 @@ alignment_panel.o: ../FL/Fl_Widget.H
 alignment_panel.o: ../FL/Fl_Window.H
 alignment_panel.o: ../FL/Fl_Wizard.H
 alignment_panel.o: ../FL/platform_types.h
+alignment_panel.o: ../src/flstring.h
 alignment_panel.o: alignment_panel.h
 alignment_panel.o: code.h
 alignment_panel.o: Fd_Snap_Action.h
@@ -187,6 +191,7 @@ code.o: ../FL/Fl_Scheme.H
 code.o: ../FL/Fl_Scheme_Choice.H
 code.o: ../FL/Fl_Scrollbar.H
 code.o: ../FL/Fl_Shared_Image.H
+code.o: ../FL/Fl_Shortcut_Button.H
 code.o: ../FL/Fl_Simple_Terminal.H
 code.o: ../FL/Fl_Slider.H
 code.o: ../FL/Fl_Spinner.H
@@ -195,6 +200,7 @@ code.o: ../FL/fl_string_functions.h
 code.o: ../FL/Fl_Tabs.H
 code.o: ../FL/Fl_Text_Buffer.H
 code.o: ../FL/Fl_Text_Display.H
+code.o: ../FL/Fl_Text_Editor.H
 code.o: ../FL/Fl_Tile.H
 code.o: ../FL/fl_types.h
 code.o: ../FL/fl_utf8.h
@@ -470,6 +476,7 @@ Fd_Snap_Action.o: ../FL/Fl_RGB_Image.H
 Fd_Snap_Action.o: ../FL/Fl_Scheme.H
 Fd_Snap_Action.o: ../FL/Fl_Scheme_Choice.H
 Fd_Snap_Action.o: ../FL/Fl_Scrollbar.H
+Fd_Snap_Action.o: ../FL/Fl_Shortcut_Button.H
 Fd_Snap_Action.o: ../FL/Fl_Simple_Terminal.H
 Fd_Snap_Action.o: ../FL/Fl_Slider.H
 Fd_Snap_Action.o: ../FL/Fl_Spinner.H
@@ -478,6 +485,7 @@ Fd_Snap_Action.o: ../FL/fl_string_functions.h
 Fd_Snap_Action.o: ../FL/Fl_Tabs.H
 Fd_Snap_Action.o: ../FL/Fl_Text_Buffer.H
 Fd_Snap_Action.o: ../FL/Fl_Text_Display.H
+Fd_Snap_Action.o: ../FL/Fl_Text_Editor.H
 Fd_Snap_Action.o: ../FL/Fl_Tile.H
 Fd_Snap_Action.o: ../FL/fl_types.h
 Fd_Snap_Action.o: ../FL/fl_utf8.h
@@ -548,6 +556,7 @@ file.o: ../FL/Fl_Scheme.H
 file.o: ../FL/Fl_Scheme_Choice.H
 file.o: ../FL/Fl_Scrollbar.H
 file.o: ../FL/Fl_Shared_Image.H
+file.o: ../FL/Fl_Shortcut_Button.H
 file.o: ../FL/Fl_Simple_Terminal.H
 file.o: ../FL/Fl_Slider.H
 file.o: ../FL/Fl_Spinner.H
@@ -556,6 +565,7 @@ file.o: ../FL/fl_string_functions.h
 file.o: ../FL/Fl_Tabs.H
 file.o: ../FL/Fl_Text_Buffer.H
 file.o: ../FL/Fl_Text_Display.H
+file.o: ../FL/Fl_Text_Editor.H
 file.o: ../FL/Fl_Tile.H
 file.o: ../FL/fl_types.h
 file.o: ../FL/fl_utf8.h
@@ -637,6 +647,7 @@ fluid.o: ../FL/Fl_Scheme.H
 fluid.o: ../FL/Fl_Scheme_Choice.H
 fluid.o: ../FL/Fl_Scrollbar.H
 fluid.o: ../FL/Fl_Shared_Image.H
+fluid.o: ../FL/Fl_Shortcut_Button.H
 fluid.o: ../FL/Fl_Simple_Terminal.H
 fluid.o: ../FL/Fl_Slider.H
 fluid.o: ../FL/Fl_Spinner.H
@@ -675,6 +686,7 @@ fluid.o: Fl_Window_Type.h
 fluid.o: function_panel.h
 fluid.o: pixmaps.h
 fluid.o: shell_command.h
+fluid.o: sourceview_panel.h
 fluid.o: StyleParse.h
 fluid.o: template_panel.h
 fluid.o: undo.h
@@ -744,6 +756,7 @@ Fluid_Image.o: Fl_Type.h
 Fluid_Image.o: Fl_Widget_Type.h
 Fluid_Image.o: Fl_Window_Type.h
 Fl_Button_Type.o: ../FL/Enumerations.H
+Fl_Button_Type.o: ../FL/filename.H
 Fl_Button_Type.o: ../FL/Fl.H
 Fl_Button_Type.o: ../FL/fl_attr.h
 Fl_Button_Type.o: ../FL/Fl_Bitmap.H
@@ -770,6 +783,7 @@ Fl_Button_Type.o: ../FL/Fl_Repeat_Button.H
 Fl_Button_Type.o: ../FL/Fl_Return_Button.H
 Fl_Button_Type.o: ../FL/Fl_RGB_Image.H
 Fl_Button_Type.o: ../FL/Fl_Round_Button.H
+Fl_Button_Type.o: ../FL/Fl_String.H
 Fl_Button_Type.o: ../FL/Fl_Tabs.H
 Fl_Button_Type.o: ../FL/fl_types.h
 Fl_Button_Type.o: ../FL/fl_utf8.h
@@ -778,6 +792,8 @@ Fl_Button_Type.o: ../FL/Fl_Wizard.H
 Fl_Button_Type.o: ../FL/platform_types.h
 Fl_Button_Type.o: code.h
 Fl_Button_Type.o: Fd_Snap_Action.h
+Fl_Button_Type.o: file.h
+Fl_Button_Type.o: fluid.h
 Fl_Button_Type.o: Fl_Button_Type.h
 Fl_Button_Type.o: Fl_Group_Type.h
 Fl_Button_Type.o: Fl_Type.h
@@ -970,6 +986,7 @@ Fl_Menu_Type.o: ../FL/fl_string_functions.h
 Fl_Menu_Type.o: ../FL/Fl_Tabs.H
 Fl_Menu_Type.o: ../FL/Fl_Text_Buffer.H
 Fl_Menu_Type.o: ../FL/Fl_Text_Display.H
+Fl_Menu_Type.o: ../FL/Fl_Text_Editor.H
 Fl_Menu_Type.o: ../FL/Fl_Tile.H
 Fl_Menu_Type.o: ../FL/fl_types.h
 Fl_Menu_Type.o: ../FL/fl_utf8.h
@@ -1272,7 +1289,6 @@ function_panel.o: ../FL/Fl_RGB_Image.H
 function_panel.o: ../FL/Fl_Scrollbar.H
 function_panel.o: ../FL/Fl_Slider.H
 function_panel.o: ../FL/Fl_String.H
-function_panel.o: ../FL/Fl_Tabs.H
 function_panel.o: ../FL/Fl_Text_Buffer.H
 function_panel.o: ../FL/Fl_Text_Display.H
 function_panel.o: ../FL/Fl_Text_Editor.H
@@ -1308,6 +1324,7 @@ pixmaps.o: ../FL/Fl_Plugin.H
 pixmaps.o: ../FL/Fl_Preferences.H
 pixmaps.o: ../FL/Fl_Rect.H
 pixmaps.o: ../FL/Fl_RGB_Image.H
+pixmaps.o: ../FL/Fl_String.H
 pixmaps.o: ../FL/fl_types.h
 pixmaps.o: ../FL/Fl_Widget.H
 pixmaps.o: ../FL/platform_types.h
@@ -1407,6 +1424,7 @@ shell_command.o: ../FL/Fl_Input_.H
 shell_command.o: ../FL/Fl_Int_Input.H
 shell_command.o: ../FL/Fl_Light_Button.H
 shell_command.o: ../FL/Fl_Menu_.H
+shell_command.o: ../FL/Fl_Menu_Bar.H
 shell_command.o: ../FL/Fl_Menu_Button.H
 shell_command.o: ../FL/Fl_Menu_Item.H
 shell_command.o: ../FL/fl_message.H
@@ -1422,6 +1440,7 @@ shell_command.o: ../FL/Fl_RGB_Image.H
 shell_command.o: ../FL/Fl_Scheme.H
 shell_command.o: ../FL/Fl_Scheme_Choice.H
 shell_command.o: ../FL/Fl_Scrollbar.H
+shell_command.o: ../FL/Fl_Shortcut_Button.H
 shell_command.o: ../FL/Fl_Simple_Terminal.H
 shell_command.o: ../FL/Fl_Slider.H
 shell_command.o: ../FL/Fl_Spinner.H
@@ -1430,6 +1449,7 @@ shell_command.o: ../FL/fl_string_functions.h
 shell_command.o: ../FL/Fl_Tabs.H
 shell_command.o: ../FL/Fl_Text_Buffer.H
 shell_command.o: ../FL/Fl_Text_Display.H
+shell_command.o: ../FL/Fl_Text_Editor.H
 shell_command.o: ../FL/Fl_Tile.H
 shell_command.o: ../FL/fl_types.h
 shell_command.o: ../FL/fl_utf8.h
@@ -1442,6 +1462,7 @@ shell_command.o: ../FL/platform_types.h
 shell_command.o: alignment_panel.h
 shell_command.o: code.h
 shell_command.o: Fd_Snap_Action.h
+shell_command.o: file.h
 shell_command.o: fluid.h
 shell_command.o: Fl_Group_Type.h
 shell_command.o: Fl_Type.h
@@ -1449,6 +1470,52 @@ shell_command.o: Fl_Widget_Type.h
 shell_command.o: Fl_Window_Type.h
 shell_command.o: shell_command.h
 shell_command.o: widget_browser.h
+sourceview_panel.o: ../config.h
+sourceview_panel.o: ../FL/Enumerations.H
+sourceview_panel.o: ../FL/filename.H
+sourceview_panel.o: ../FL/Fl.H
+sourceview_panel.o: ../FL/fl_attr.h
+sourceview_panel.o: ../FL/Fl_Bitmap.H
+sourceview_panel.o: ../FL/Fl_Box.H
+sourceview_panel.o: ../FL/Fl_Button.H
+sourceview_panel.o: ../FL/Fl_Cairo.H
+sourceview_panel.o: ../FL/fl_casts.H
+sourceview_panel.o: ../FL/fl_config.h
+sourceview_panel.o: ../FL/Fl_Device.H
+sourceview_panel.o: ../FL/Fl_Double_Window.H
+sourceview_panel.o: ../FL/fl_draw.H
+sourceview_panel.o: ../FL/Fl_Export.H
+sourceview_panel.o: ../FL/Fl_Graphics_Driver.H
+sourceview_panel.o: ../FL/Fl_Group.H
+sourceview_panel.o: ../FL/Fl_Image.H
+sourceview_panel.o: ../FL/Fl_Light_Button.H
+sourceview_panel.o: ../FL/Fl_Menu_Item.H
+sourceview_panel.o: ../FL/Fl_Pixmap.H
+sourceview_panel.o: ../FL/Fl_Plugin.H
+sourceview_panel.o: ../FL/Fl_Preferences.H
+sourceview_panel.o: ../FL/Fl_Rect.H
+sourceview_panel.o: ../FL/Fl_RGB_Image.H
+sourceview_panel.o: ../FL/Fl_Scrollbar.H
+sourceview_panel.o: ../FL/Fl_Slider.H
+sourceview_panel.o: ../FL/Fl_String.H
+sourceview_panel.o: ../FL/Fl_Tabs.H
+sourceview_panel.o: ../FL/Fl_Text_Buffer.H
+sourceview_panel.o: ../FL/Fl_Text_Display.H
+sourceview_panel.o: ../FL/Fl_Text_Editor.H
+sourceview_panel.o: ../FL/fl_types.h
+sourceview_panel.o: ../FL/fl_utf8.h
+sourceview_panel.o: ../FL/Fl_Valuator.H
+sourceview_panel.o: ../FL/Fl_Widget.H
+sourceview_panel.o: ../FL/Fl_Window.H
+sourceview_panel.o: ../FL/platform_types.h
+sourceview_panel.o: ../src/flstring.h
+sourceview_panel.o: code.h
+sourceview_panel.o: CodeEditor.h
+sourceview_panel.o: file.h
+sourceview_panel.o: fluid.h
+sourceview_panel.o: Fl_Type.h
+sourceview_panel.o: sourceview_panel.h
+sourceview_panel.o: StyleParse.h
 StyleParse.o: StyleParse.h
 template_panel.o: ../config.h
 template_panel.o: ../FL/Enumerations.H
@@ -1459,7 +1526,6 @@ template_panel.o: ../FL/fl_attr.h
 template_panel.o: ../FL/Fl_Bitmap.H
 template_panel.o: ../FL/Fl_Box.H
 template_panel.o: ../FL/Fl_Browser.H
-template_panel.o: ../FL/Fl_Browser_.H
 template_panel.o: ../FL/Fl_Button.H
 template_panel.o: ../FL/Fl_Cairo.H
 template_panel.o: ../FL/fl_casts.H
@@ -1592,6 +1658,7 @@ widget_panel.o: ../FL/Fl_RGB_Image.H
 widget_panel.o: ../FL/Fl_Scrollbar.H
 widget_panel.o: ../FL/Fl_Shortcut_Button.H
 widget_panel.o: ../FL/Fl_Slider.H
+widget_panel.o: ../FL/Fl_String.H
 widget_panel.o: ../FL/Fl_Tabs.H
 widget_panel.o: ../FL/Fl_Text_Buffer.H
 widget_panel.o: ../FL/Fl_Text_Display.H

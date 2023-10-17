@@ -356,7 +356,7 @@ void name_public_cb(Fl_Choice* i, void* v) {
 
 /* Treating UNDO for text widget.
 
- Goal: we want to continiously update the UI while the user is typing text
+ Goal: we want to continuously update the UI while the user is typing text
  (changing the label, in this case). Source View does deferred updates, and
  the widget browser and widget panel update on every keystroke. At the same
  time, we want to limit undo actions to few and logical units.
@@ -405,7 +405,8 @@ void label_cb(Fl_Input* i, void *v) {
       undo_resume();
       if (mod) set_modflag(1);
     }
-    if ( (Fl::event() == FL_HIDE) || (Fl::event() == FL_UNFOCUS) )
+    int r = (int)Fl::callback_reason();
+    if ( (r == FL_REASON_LOST_FOCUS) || (r == FL_REASON_ENTER_KEY) )
       first_change = 1;
   }
 }
@@ -895,7 +896,7 @@ void wc_relative_cb(Fl_Choice *i, void *v) {
 ////////////////////////////////////////////////////////////////
 
 // turn number to string or string to number for saving to file:
-// does not work for hierarchial menus!
+// does not work for hierarchical menus!
 
 const char *item_name(Fl_Menu_Item* m, int i) {
   if (m) {
@@ -1079,6 +1080,39 @@ void down_box_cb(Fl_Choice* i, void *v) {
     if (mod) set_modflag(1);
   }
 }
+
+void compact_cb(Fl_Light_Button* i, void* v) {
+  if (v == LOAD) {
+    uchar n;
+    if (current_widget->is_a(Fl_Type::ID_Button) && !current_widget->is_a(Fl_Type::ID_Menu_Item)) {
+      n = ((Fl_Button*)(current_widget->o))->compact();
+      i->value(n);
+      i->show();
+    } else {
+      i->hide();
+    }
+  } else {
+    int mod = 0;
+    uchar n = (uchar)i->value();
+    for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
+      if (o->selected && o->is_a(Fl_Type::ID_Button) && !o->is_a(Fl_Type::ID_Menu_Item)) {
+        Fl_Widget_Type* q = (Fl_Widget_Type*)o;
+        uchar v = ((Fl_Button*)(q->o))->compact();
+        if (n != v) {
+          if (!mod) {
+            mod = 1;
+            undo_checkpoint();
+          }
+          ((Fl_Button*)(q->o))->compact(n);
+          q->redraw();
+        }
+      }
+    }
+    if (mod) set_modflag(1);
+  }
+}
+
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -2502,7 +2536,7 @@ void propagate_load(Fl_Group* g, void* v) {
     Fl_Widget*const* a = g->array();
     for (int i=g->children(); i--;) {
       Fl_Widget* o = *a++;
-      o->do_callback(o,LOAD);
+      o->do_callback(o, LOAD, FL_REASON_USER);
     }
   }
 }
@@ -3038,6 +3072,7 @@ void Fl_Widget_Type::write_widget_code(Fd_Code_Writer& f) {
     if (b->down_box()) f.write_c("%s%s->down_box(FL_%s);\n", f.indent(), var,
                                boxname(b->down_box()));
     if (b->value()) f.write_c("%s%s->value(1);\n", f.indent(), var);
+    if (b->compact()) f.write_c("%s%s->compact(%d);\n", f.indent(), var, b->compact());
   } else if (is_a(Fl_Type::ID_Input_Choice)) {
     Fl_Input_Choice* b = (Fl_Input_Choice*)o;
     if (b->down_box()) f.write_c("%s%s->down_box(FL_%s);\n", f.indent(), var,

@@ -1,7 +1,7 @@
 //
 // Code output routines for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -46,12 +46,12 @@ int is_id(char c) {
 /**
  Write a file that contains all label and tooltip strings for internationalisation.
  */
-int write_strings(const char *sfile) {
-  FILE *fp = fl_fopen(sfile, "w");
+int write_strings(const Fl_String &filename) {
   Fl_Type *p;
   Fl_Widget_Type *w;
   int i;
 
+  FILE *fp = fl_fopen(filename.c_str(), "w");
   if (!fp) return 1;
 
   switch (g_project.i18n_type) {
@@ -187,7 +187,7 @@ Fd_Identifier_Tree::~Fd_Identifier_Tree() {
 
 /** \brief Return a unique name for the given object.
 
- This function combines the anem and label into an identifier. It then checks
+ This function combines the name and label into an identifier. It then checks
  if that id was already taken by another object, and if so, appends a
  hexadecimal value which is incremented until the id is unique in this file.
 
@@ -385,7 +385,7 @@ bool Fd_Code_Writer::c_contains(void *pp) {
  Adds " before and after the text.
 
  A list of control characters and ", ', and \\ are escaped by adding a \\ in
- front of them. Escape ?? by wrinting ?\\?. All other characters that are not
+ front of them. Escape ?? by writing ?\\?. All other characters that are not
  between 32 and 126 inclusive will be escaped as octal characters.
 
  This function is utf8 agnostic.
@@ -610,7 +610,7 @@ void Fd_Code_Writer::write_hc(const char *indent, int n, const char* c, const ch
 
 /**
  Write one or more lines of code, indenting each one of them.
- \param[in] textlines one or more lines of text, seperated by \\n
+ \param[in] textlines one or more lines of text, separated by \\n
  */
 void Fd_Code_Writer::write_c_indented(const char *textlines, int inIndent, char inTrailwWith) {
   if (textlines) {
@@ -738,7 +738,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
       first_type->code_position = (int)ftell(code_file);
       first_type->header_position = (int)ftell(header_file);
     }
-    // it is ok to write non-recusive code here, because comments have no children or code2 blocks
+    // it is ok to write non-recursive code here, because comments have no children or code2 blocks
     first_type->write_code1(*this);
     if (write_sourceview) {
       first_type->code_position_end = (int)ftell(code_file);
@@ -771,7 +771,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
     } else if (g_project.header_file_name[0] == '.' && strchr(g_project.header_file_name.c_str(), '/') == NULL) {
       write_c("#include \"%s\"\n", fl_filename_name(t));
     } else {
-      write_c("#include \"%s\"\n", t);
+      write_c("#include \"%s\"\n", g_project.header_file_name.c_str());
     }
   }
   Fl_String loc_include, loc_conditional;
@@ -799,7 +799,7 @@ int Fd_Code_Writer::write_code(const char *s, const char *t, bool to_sourceview)
         write_c("// Initialize I18N stuff now for menus...\n");
         write_c("#%sinclude <locale.h>\n", indent());
         write_c("static char *_locale = setlocale(LC_MESSAGES, \"\");\n");
-        write_c("static nl_catd _catalog = catopen(\"%s\", 0);\n", g_project.basename.c_str());
+        write_c("static nl_catd _catalog = catopen(\"%s\", 0);\n", g_project.basename().c_str());
       }
     }
     if (conditional) {
