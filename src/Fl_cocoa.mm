@@ -1799,7 +1799,7 @@ void Fl_Cocoa_Screen_Driver::open_display_platform() {
     FLAppDelegate *delegate = (Fl_Darwin_System_Driver::calc_mac_os_version() < 100500 ? [FLAppDelegateBefore10_5 alloc] : [FLAppDelegate alloc]);
     [(NSApplication*)NSApp setDelegate:[delegate init]];
     if (need_new_nsapp) {
-      if (fl_mac_os_version >= 101300 && is_bundled() ) {
+      if (fl_mac_os_version >= 101300 && fl_mac_os_version < 140000 && is_bundled()) {
         [NSApp activateIgnoringOtherApps:YES];
         in_nsapp_run = true;
         [NSApp run];
@@ -1815,15 +1815,15 @@ void Fl_Cocoa_Screen_Driver::open_display_platform() {
                                                 dequeue:NO];
       }
     }
-
-    // empty the event queue but keep system events for drag&drop of files at launch
-    NSEvent *ign_event;
-    do ign_event = [NSApp nextEventMatchingMask:(NSEventMaskAny & ~NSEventMaskSystemDefined)
-                                        untilDate:[NSDate dateWithTimeIntervalSinceNow:0]
-                                           inMode:NSDefaultRunLoopMode
-                                          dequeue:YES];
-    while (ign_event);
-
+    if (fl_mac_os_version < 140000) {
+      // empty the event queue but keep system events for drag&drop of files at launch
+      NSEvent *ign_event;
+       do ign_event = [NSApp nextEventMatchingMask:(NSEventMaskAny & ~NSEventMaskSystemDefined)
+       untilDate:[NSDate dateWithTimeIntervalSinceNow:0]
+       inMode:NSDefaultRunLoopMode
+       dequeue:YES];
+       while (ign_event);
+    }
     if (![NSApp isActive]) foreground_and_activate();
     if (![NSApp servicesMenu]) createAppleMenu();
     else Fl_Sys_Menu_Bar::window_menu_style(Fl_Sys_Menu_Bar::no_window_menu);

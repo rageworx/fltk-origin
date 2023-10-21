@@ -587,7 +587,7 @@ void Fl_Grid::remove_cell(int row, int col) {
 void Fl_Grid::resize(int X, int Y, int W, int H) {
   old_size = Fl_Rect(x(), y(), w(), h());
   Fl_Widget::resize(X, Y, W, H);
-  need_layout(1);
+  layout();
 }
 
 /**
@@ -641,6 +641,31 @@ void Fl_Grid::margin(int left, int top, int right, int bottom) {
   need_layout(1);
 }
 
+/** 
+ Returns all outside margin sizes of the grid.
+
+ All margin sizes are returned in the given arguments. If any argument
+ is \p NULL the respective value is not returned.
+
+ \param[out]  left    returns left margin if not \p NULL
+ \param[out]  top     returns top margin if not \p NULL
+ \param[out]  right   returns right margin if not \p NULL
+ \param[out]  bottom  returns bottom margin if not \p NULL
+
+ \return     whether all margins are equal
+ \retval  1  all margins have the same size
+ \retval  0  at least one margin has a different size
+ */
+int Fl_Grid::margin(int *left, int *top, int *right, int *bottom) const {
+  if (left) *left = margin_left_;
+  if (top) *top = margin_top_;
+  if (right) *right = margin_right_;
+  if (bottom) *bottom = margin_bottom_;
+  if (margin_left_ == margin_top_ && margin_top_ == margin_right_ && margin_right_ == margin_bottom_)
+    return 1;
+  return 0;
+}
+
 /**
   Set default gaps for rows and columns.
 
@@ -667,6 +692,19 @@ void Fl_Grid::gap(int row_gap, int col_gap) {
   if (col_gap >= 0)
     gap_col_ = col_gap;
   need_layout(1);
+}
+
+/**
+ Get the default gaps for rows and columns.
+
+ \param[out]  row_gap  pointer to int to receive column gap, may be NULL
+ \param[out]  col_gap  pointer to int to receive column gap, may be NULL
+ */
+void Fl_Grid::gap(int *row_gap, int *col_gap) const {
+  if (row_gap)
+    *row_gap = gap_row_;
+  if (col_gap)
+    *col_gap = gap_col_;
 }
 
 /**
@@ -773,6 +811,9 @@ Fl_Grid::Cell *Fl_Grid::widget(Fl_Widget *wi, int row, int col, Fl_Grid_Align al
   assigned to another widget that widget is deassigned but kept as a
   child of the group.
 
+  Before you can assign a widget to a cell it must have been created as
+  a child of the Fl_Grid widget (i.e. its Fl_Group).
+
   \param[in]  wi        widget to be assigned to the cell
   \param[in]  row       row
   \param[in]  col       column
@@ -781,10 +822,15 @@ Fl_Grid::Cell *Fl_Grid::widget(Fl_Widget *wi, int row, int col, Fl_Grid_Align al
   \param[in]  align     widget alignment inside the cell
 
   \return     assigned cell
-  \retval     NULL      if \p row or \p col is out of bounds
+  \retval     NULL      if \p row or \p col is out of bounds or \p wi is not a child
 */
 Fl_Grid::Cell *Fl_Grid::widget(Fl_Widget *wi, int row, int col, int rowspan, int colspan, Fl_Grid_Align align) {
 
+  int child = Fl_Group::find(wi); // is this widget one of our children?
+  if (child >= children()) {
+    // fprintf(stderr, "Fl_Grid::widget(): can't assign widget %p to cell (%d, %d): not a child!\n", wi, row, col);
+    return 0;
+  }
   if (row < 0 || row > rows_)
     return 0;
   if (col < 0 || col > cols_)

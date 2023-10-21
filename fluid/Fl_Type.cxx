@@ -67,6 +67,7 @@
           +-+ Fl_Group_Type
           | +-- Fl_Pack_Type
           | +-- Fl_Flex_Type
+          | +-- Fl_Grid_Type
           | +-- Fl_Table_Type
           | +-- Fl_Tabs_Type
           | +-- Fl_Scroll_Type
@@ -238,7 +239,12 @@ static void delete_children(Fl_Type *p) {
   }
 }
 
-// object list operations:
+/** Delete all nodes in the Types tree and reset project settings, or delete selected nodes.
+ Also calls the browser to refresh.
+ \note Please refactor this into two separate methods of Fluid_Project.
+ \param[in] selected_only if set, delete only the selected widgets and
+ don't reset the project.
+ */
 void delete_all(int selected_only) {
   for (Fl_Type *f = Fl_Type::first; f;) {
     if (f->selected || !selected_only) {
@@ -268,8 +274,14 @@ void delete_all(int selected_only) {
   widget_browser->redraw();
 }
 
-// update a string member:
-// replace a string pointer with new value, strips leading/trailing blanks:
+/** Update a string.
+ Replace a string pointer with new value, strips leading/trailing blanks.
+ As a side effect, this call also sets the mod flags.
+ \param[in] n new string, can be NULL
+ \param[out] p update this pointer, possibly reallocate memory
+ \param[in] nostrip if set, do not strip leading and trailing spaces and tabs
+ \return 1 if the string in p changed
+ */
 int storestring(const char *n, const char * & p, int nostrip) {
   if (n == p) return 0;
   undo_checkpoint();
@@ -295,7 +307,10 @@ int storestring(const char *n, const char * & p, int nostrip) {
   return 1;
 }
 
-void fixvisible(Fl_Type *p) {
+/** Update the `visible` flag for `p` and all its descendants.
+ \param[in] p start here and update all descendants
+ */
+void update_visibility_flag(Fl_Type *p) {
   Fl_Type *t = p;
   for (;;) {
     if (t->parent) t->visible = t->parent->visible && t->parent->open_;
@@ -427,7 +442,7 @@ Fl_Group_Type *Fl_Type::group() {
   if (!is_widget())
     return NULL;
   for (Fl_Type *t = this; t; t=t->parent)
-    if (t->is_group())
+    if (t->is_a(ID_Group))
       return (Fl_Group_Type*)t;
   return NULL;
 }
@@ -482,7 +497,7 @@ void Fl_Type::add(Fl_Type *p, Strategy strategy) {
   // tell this that it was added, so it can update itself
   if (p) p->add_child(this,0);
   open_ = 1;
-  fixvisible(this);
+  update_visibility_flag(this);
   set_modflag(1);
 
   if (strategy==kAddAfterCurrent && current) {
@@ -528,7 +543,7 @@ void Fl_Type::insert(Fl_Type *g) {
   if (prev) prev->next = this; else first = this;
   end->next = g;
   g->prev = end;
-  fixvisible(this);
+  update_visibility_flag(this);
   // tell parent that it has a new child, so it can update itself
   if (parent) parent->add_child(this, g);
   widget_browser->redraw();
@@ -589,7 +604,7 @@ Fl_Type *Fl_Type::remove() {
 }
 
 void Fl_Type::name(const char *n) {
-  int nostrip = is_a(Fl_Type::ID_Comment);
+  int nostrip = is_a(ID_Comment);
   if (storestring(n,name_,nostrip)) {
     if (visible) widget_browser->redraw();
   }
@@ -847,7 +862,7 @@ void Fl_Type::copy_properties() {
  */
 int Fl_Type::user_defined(const char* cbname) const {
   for (Fl_Type* p = Fl_Type::first; p ; p = p->next)
-    if (p->is_a(Fl_Type::ID_Function) && p->name() != 0)
+    if (p->is_a(ID_Function) && p->name() != 0)
       if (strncmp(p->name(), cbname, strlen(cbname)) == 0)
         if (p->name()[strlen(cbname)] == '(')
           return 1;
@@ -882,17 +897,16 @@ const char* Fl_Type::class_name(const int need_nest) const {
 }
 
 /**
- If this Type resides inside a class, this function returns the class type, or null.
+ Check if this is inside a Fl_Class_Type or Fl_Widget_Class_Type.
+ \return true if any of the parents is Fl_Class_Type or Fl_Widget_Class_Type
  */
-const Fl_Class_Type *Fl_Type::is_in_class() const {
+bool Fl_Type::is_in_class() const {
   Fl_Type* p = parent;
   while (p) {
-    if (p->is_class()) {
-      return (Fl_Class_Type*)p;
-    }
+    if (p->is_class()) return true;
     p = p->parent;
   }
-  return 0;
+  return false;
 }
 
 void Fl_Type::write_static(Fd_Code_Writer&) {
