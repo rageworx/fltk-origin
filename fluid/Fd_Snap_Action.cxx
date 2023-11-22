@@ -18,6 +18,7 @@
 
 #include "Fl_Group_Type.h"
 #include "alignment_panel.h"
+#include "shell_command.h"  // get and set Fl_String preferences
 #include "file.h"
 
 #include <FL/fl_draw.H>
@@ -692,7 +693,7 @@ void Fd_Layout_List::read(Fl_Preferences &prefs, Fd_Tool_Store storage) {
   Fl_Preferences prefs_list(prefs, "Layouts");
   Fl_String cs;
   int cp = 0;
-  prefs_list.get("current_suite", cs, "");
+  preferences_get(prefs_list, "current_suite", cs, "");
   prefs_list.get("current_preset", cp, 0);
   for (int i = 0; i < prefs_list.groups(); ++i) {
     Fl_Preferences prefs_suite(prefs_list, Fl_Preferences::Name(i));
@@ -920,8 +921,8 @@ static void draw_right_brace(const Fl_Widget *w);
 static void draw_top_brace(const Fl_Widget *w);
 static void draw_bottom_brace(const Fl_Widget *w);
 static void draw_grid(int x, int y, int dx, int dy);
-static void draw_width(int x, int y, int r, Fl_Align a);
-static void draw_height(int x, int y, int b, Fl_Align a);
+void draw_width(int x, int y, int r, Fl_Align a);
+void draw_height(int x, int y, int b, Fl_Align a);
 
 static int nearest(int x, int left, int grid, int right=0x7fff) {
   int grid_x = ((x-left+grid/2)/grid)*grid+left;
@@ -1733,7 +1734,7 @@ static void draw_bottom_brace(const Fl_Widget *w) {
   fl_xyline(x-2, y, x+w->w()+1);
 }
 
-static void draw_height(int x, int y, int b, Fl_Align a) {
+void draw_height(int x, int y, int b, Fl_Align a) {
   char buf[16];
   int h = b - y;
   sprintf(buf, "%d", h);
@@ -1767,7 +1768,7 @@ static void draw_height(int x, int y, int b, Fl_Align a) {
   fl_xyline(x - 4, b, x + 4);
 }
 
-static void draw_width(int x, int y, int r, Fl_Align a) {
+void draw_width(int x, int y, int r, Fl_Align a) {
   char buf[16];
   int w = r-x;
   sprintf(buf, "%d", w);

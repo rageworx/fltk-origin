@@ -1,8 +1,8 @@
 //
 // Preferences methods for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 2011-2022 by Bill Spitzak and others.
 // Copyright 2002-2010 by Matthias Melcher.
+// Copyright 2011-2023 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -19,16 +19,18 @@
 #include "Fl_System_Driver.H"
 #include <FL/Fl_Preferences.H>
 #include <FL/Fl_Plugin.H>
-#include <FL/Fl_String.H>
 #include <FL/filename.H>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
 #include <FL/fl_utf8.h>
 #include <FL/fl_string_functions.h>
 #include "flstring.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
+#if (FLTK_USE_STD)
+#include <string>
+#endif
 
 char Fl_Preferences::nameBuffer[128];
 char Fl_Preferences::uuidBuffer[40];
@@ -845,6 +847,8 @@ char Fl_Preferences::get( const char *key, char *&text, const char *defaultValue
   return ( v != defaultValue );
 }
 
+#if (FLTK_USE_STD)
+
 /**
  Reads an entry from the group. A default value must be
  supplied. The return value indicates if the value was available
@@ -855,7 +859,7 @@ char Fl_Preferences::get( const char *key, char *&text, const char *defaultValue
  \param[in] defaultValue default value to be used if no preference was set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get( const char *key, Fl_String &value, const Fl_String &defaultValue ) {
+char Fl_Preferences::get( const char *key, std::string &value, const std::string &defaultValue ) {
   const char *v = node->get( key );
   if (v) {
     if ( strchr( v, '\\' ) ) {
@@ -871,6 +875,8 @@ char Fl_Preferences::get( const char *key, Fl_String &value, const Fl_String &de
     return 0;
   }
 }
+
+#endif
 
 /**
  Sets an entry (name/value pair). The return value indicates if there
@@ -1042,6 +1048,8 @@ char Fl_Preferences::set( const char *key, const void *data, int dsize ) {
   return 1;
 }
 
+#if (FLTK_USE_STD)
+
 /**
  Sets an entry (name/value pair). The return value indicates if there
  was a problem storing the data in memory. However it does not
@@ -1051,10 +1059,11 @@ char Fl_Preferences::set( const char *key, const void *data, int dsize ) {
  \param[in] value set this entry to value (stops at the first nul character).
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set( const char *entry, const Fl_String &value ) {
+char Fl_Preferences::set( const char *entry, const std::string &value ) {
   return set(entry, value.c_str());
 }
 
+#endif // FLTK_USE_STD
 
 /**
  Returns the size of the value part of an entry.

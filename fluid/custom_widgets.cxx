@@ -142,6 +142,7 @@ vars_(0L),
 vars_user_data_(0L)
 {
   Fl_Input::callback((Fl_Callback*)callback_handler_cb);
+  text("0");
 }
 
 void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
@@ -156,7 +157,7 @@ void Fluid_Coord_Input::callback_handler(void *v) {
 }
 
 /**
- Get the value of a variable.
+ \brief Get the value of a variable.
  Collects all consecutive ASCII letters into a variable name, scans the
  Variable list for that name, and then calls the corresponding callback from
  the Variable array.

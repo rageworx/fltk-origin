@@ -140,7 +140,8 @@ const Fl_Grid_Align  FL_GRID_BOTTOM_RIGHT    =  FL_GRID_BOTTOM |  FL_GRID_RIGHT;
   \image html  Fl_Grid.png
   \image latex Fl_Grid.png "Simple 3x3 Fl_Grid" width=7cm
 */
-class Fl_Grid : public Fl_Group {
+class FL_EXPORT Fl_Grid : public Fl_Group {
+  friend class Fl_Grid_Type;
 
 public:
   class Cell {
@@ -158,10 +159,10 @@ public:
 
   public:
 
-    Cell(int row, int col) {
+    void Cell_() {
       next_ = NULL;
-      row_ = row;
-      col_ = col;
+      row_ = 0;
+      col_ = 0;
       rowspan_ = 1;
       colspan_ = 1;
       widget_ = NULL;
@@ -170,12 +171,36 @@ public:
       align_ = 0;
     }
 
+    Cell(int row, int col) {
+      Cell_();
+      row_ = row;
+      col_ = col;
+    }
+
+    Cell(Fl_Widget *w, int row, int col) {
+      Cell_();
+      widget_ = w;
+      row_ = row;
+      col_ = col;
+    }
+
     ~Cell() {}
 
-    Fl_Widget *widget() { return widget_; }
-    void align(Fl_Grid_Align align) {
-      align_ = align;
-    }
+    Fl_Widget *widget() const { return widget_; }
+
+    short row() const { return row_; }
+    short col() const { return col_; }
+
+    void rowspan(short v) { rowspan_ = v; }
+    void colspan(short v) { colspan_ = v; }
+    short rowspan() const { return rowspan_; }
+    short colspan() const { return colspan_; }
+
+    void align(Fl_Grid_Align align) { align_ = align; }
+    Fl_Grid_Align align() const { return align_; }
+
+    void minimum_size(int w, int h) { if (w>=0) w_ = w; if (h>=0) h_ = h; }
+    void minimum_size(int *w, int *h) const { if (w) *w = w_; if (h) *h = h_; }
   }; // class Cell
 
 private:
@@ -199,7 +224,7 @@ protected:
   Fl_Color grid_color;        // color for drawing the grid lines (design helper)
   bool draw_grid_;            // draw the grid for testing / design
 
-private:
+protected:
   void init();
   Cell *add_cell(int row, int col);
   void remove_cell(int row, int col);
@@ -277,21 +302,30 @@ public:
 
   void col_width(int col, int value);
   void col_width(const int *value, size_t size);
+  int col_width(int col) const;
 
   void col_weight(int col, int value);
   void col_weight(const int *value, size_t size);
+  int col_weight(int col) const;
 
   void col_gap(int col, int value);
   void col_gap(const int *value, size_t size);
+  int col_gap(int col) const;
 
   void row_height(int row, int value);
   void row_height(const int *value, size_t size);
+  int row_height(int row) const;
 
   void row_weight(int row, int value);
   void row_weight(const int *value, size_t size);
+  int row_weight(int row) const;
 
   void row_gap(int row, int value);
   void row_gap(const int *value, size_t size);
+  int row_gap(int row) const;
+
+  int computed_col_width(int col) const;
+  int computed_row_height(int row) const;
 
   /**
     Enable or disable drawing of the grid helper lines for visualization.

@@ -17,10 +17,10 @@
 #ifndef _FLUID_FLUID_H
 #define _FLUID_FLUID_H
 
-#include <FL/filename.H>
+#include "fluid_filename.h"
 #include <FL/Fl_Preferences.H>
 #include <FL/Fl_Menu_Item.H>
-#include <FL/Fl_String.H>
+#include "../src/Fl_String.H"
 
 #define BROWSERWIDTH 300
 #define BROWSERHEIGHT 500
@@ -60,6 +60,7 @@ extern Fl_Window *main_window;
 
 extern int show_guides;
 extern int show_restricted;
+extern int show_ghosted_outline;
 extern int show_comments;
 
 extern int G_use_external_editor;
@@ -133,6 +134,7 @@ public:
   int avoid_early_includes;
   int header_file_set;
   int code_file_set;
+  int write_mergeback_data;
   Fl_String header_file_name;
   Fl_String code_file_name;
 };
@@ -155,7 +157,7 @@ extern void save_template_cb(Fl_Widget *, void *);
 extern void revert_cb(Fl_Widget *,void *);
 extern void exit_cb(Fl_Widget *,void *);
 
-extern int write_code_files();
+extern int write_code_files(bool dont_show_completion_dialog=false);
 extern void write_strings_cb(Fl_Widget *, void *);
 extern void align_widget_cb(Fl_Widget *, long);
 extern void toggle_widgetbin_cb(Fl_Widget *, void *);

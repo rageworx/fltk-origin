@@ -1351,6 +1351,9 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
     window->redraw();
   }
 #endif
+  if (!window->parent() && window->border()) {
+    Fl_Cocoa_Window_Driver::driver(window)->is_maximized([nsw isZoomed]);
+  }
   fl_unlock_function();
 }
 - (void)windowDidResignKey:(NSNotification *)notif
@@ -1487,6 +1490,7 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
   open_cb_f_type open_cb;
   TSMDocumentID currentDoc;
 }
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app;
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*)sender;
 - (void)applicationDidBecomeActive:(NSNotification *)notify;
@@ -1499,6 +1503,14 @@ static FLWindowDelegate *flwindowdelegate_instance = nil;
 @end
 
 @implementation FLAppDelegate
+- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
+  // Avoids macOS 14 warning message when app is launched from command line:
+  // "WARNING: Secure coding is automatically enabled for restorable state!
+  // However, not on all supported macOS versions of this application.
+  // Opt-in to secure coding explicitly by implementing
+  // NSApplicationDelegate.applicationSupportsSecureRestorableState:."
+  return (fl_mac_os_version >= 140000);
+}
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
     if (fl_mac_os_version >= 101300 && [NSApp isRunning]) [NSApp stop:nil];
@@ -3144,7 +3156,8 @@ void Fl_Cocoa_Window_Driver::makeWindow()
   if (w->modal()) Fl::modal_ = w;
 
   w->set_visible();
-  if ( w->border() || (!w->modal() && !w->tooltip_window()) ) Fl::handle(FL_FOCUS, w);
+  if ( w->border() || (!w->modal() && !w->tooltip_window() &&
+                       w->user_data() != &Fl_Screen_Driver::transient_scale_display) ) Fl::handle(FL_FOCUS, w);
   [cw setDelegate:[FLWindowDelegate singleInstance]];
   if (show_iconic()) {
     show_iconic(0);
@@ -3225,6 +3238,17 @@ void Fl_Cocoa_Window_Driver::fullscreen_on() {
   }
   Fl::handle(FL_FULLSCREEN, pWindow);
 }
+
+
+void Fl_Cocoa_Window_Driver::maximize() {
+  [fl_xid(pWindow) performZoom:nil];
+}
+
+
+void Fl_Cocoa_Window_Driver::un_maximize() {
+  [fl_xid(pWindow) performZoom:nil];
+}
+
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_6
 static NSUInteger calc_win_style(Fl_Window *win) {

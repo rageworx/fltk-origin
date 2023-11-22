@@ -276,7 +276,7 @@ void Fl_Grid::draw_grid() {
 
   for (int c = 0; c < cols_ - 1; c++) {
 
-    int gap = Cols_[c].gap_ >= 0 ? Cols_[c].gap_ : gap_row_;
+    int gap = Cols_[c].gap_ >= 0 ? Cols_[c].gap_ : gap_col_;
     x0 += Cols_[c].w_;
     if (gap == 0) {
       fl_yxline(x0, y0, y1);
@@ -322,7 +322,7 @@ void Fl_Grid::draw() {
   This is called automatically when the Fl_Grid is resized. You need to
   call it once after you added widgets or moved widgets between cells.
 
-  Calling it once after all modfications are completed is enough.
+  Calling it once after all modifications are completed is enough.
 
   \todo Document when and why to call layout() w/o args. See Fl_Flex::layout()
 
@@ -641,7 +641,7 @@ void Fl_Grid::margin(int left, int top, int right, int bottom) {
   need_layout(1);
 }
 
-/** 
+/**
  Returns all outside margin sizes of the grid.
 
  All margin sizes are returned in the given arguments. If any argument
@@ -922,6 +922,11 @@ void Fl_Grid::col_width(const int *value, size_t size) {
   need_layout(1);
 }
 
+int Fl_Grid::col_width(int col) const {
+  if (col >= 0 && col < cols_) return Cols_[col].minw_;
+  return 0;
+}
+
 /**
   Set the weight of a column.
 
@@ -987,6 +992,11 @@ void Fl_Grid::col_weight(const int *value, size_t size) {
   need_layout(1);
 }
 
+int Fl_Grid::col_weight(int col) const {
+  if (col >= 0 && col < cols_) return Cols_[col].weight_;
+  return 0;
+}
+
 /**
   Set the gap of column \c col.
 
@@ -1018,6 +1028,11 @@ void Fl_Grid::col_gap(const int *value, size_t size) {
   need_layout(1);
 }
 
+int Fl_Grid::col_gap(int col) const {
+  if (col >= 0 && col < cols_) return Cols_[col].gap_;
+  return 0;
+}
+
 /**
   Set the minimal row height of row \c row.
 
@@ -1029,7 +1044,6 @@ void Fl_Grid::row_height(int row, int value) {
     Rows_[row].minh_ = value;
   need_layout(1);
 }
-
 
 /**
   Set the minimal row height of more than one row.
@@ -1048,6 +1062,11 @@ void Fl_Grid::row_height(const int *value, size_t size) {
       r->minh_ = *value;
   }
   need_layout(1);
+}
+
+int Fl_Grid::row_height(int row) const {
+  if (row >= 0 && row < rows_) return Rows_[row].minh_;
+  return 0;
 }
 
 /**
@@ -1071,7 +1090,6 @@ void Fl_Grid::row_weight(int row, int value) {
   \see Fl_Grid::col_weight(const int *value, size_t size) for
     handling of the \p value array and \p size.
 */
-
 void Fl_Grid::row_weight(const int *value, size_t size) {
   Row *r = Rows_;
   for (int i = 0; i < rows_; i++, value++, r++) {
@@ -1080,6 +1098,11 @@ void Fl_Grid::row_weight(const int *value, size_t size) {
       r->weight_ = *value;
   }
   need_layout(1);
+}
+
+int Fl_Grid::row_weight(int row) const {
+  if (row >= 0 && row < rows_) return Rows_[row].weight_;
+  return 0;
 }
 
 /**
@@ -1112,6 +1135,19 @@ void Fl_Grid::row_gap(const int *value, size_t size) {
       r->gap_ = *value;
   }
   need_layout(1);
+}
+
+int Fl_Grid::row_gap(int row) const {
+  if (row >= 0 && row < rows_) return Rows_[row].gap_;
+  return 0;
+}
+
+int Fl_Grid::computed_col_width(int col) const {
+  return Cols_[col].w_;
+}
+
+int Fl_Grid::computed_row_height(int row) const {
+  return Rows_[row].h_;
 }
 
 /**

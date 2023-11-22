@@ -17,11 +17,17 @@
 #ifndef _FL_Fl_String_H_
 #define _FL_Fl_String_H_
 
-/** \file FL/Fl_String.H
+/**
+ \cond DriverDev
+ \addtogroup DriverDeveloper
+ \{
+ */
+
+/** \file src/Fl_String.H
   Basic Fl_String class for FLTK.
 */
 
-#include "Fl_Export.H"
+#include <FL/Fl_Export.H>
 
 // See: https://en.cppreference.com/w/cpp/string/basic_string/basic_string
 
@@ -129,5 +135,10 @@ public:
 FL_EXPORT Fl_String operator+(const Fl_String& lhs, const Fl_String& rhs);
 FL_EXPORT Fl_String operator+(const Fl_String& lhs, const char* rhs);
 FL_EXPORT bool operator==(const Fl_String & lhs, const Fl_String & rhs);
+
+/**
+\}
+\endcond
+*/
 
 #endif // _FL_Fl_String_H_
