@@ -455,7 +455,7 @@ protected:
     void sgr_italic(bool val)    { attrib_ = onoff(val, Fl_Terminal::ITALIC);    } // e.g. ESC[3m
     void sgr_underline(bool val) { attrib_ = onoff(val, Fl_Terminal::UNDERLINE); } // e.g. ESC[3m
     void sgr_dbl_under(bool val) { attrib_ = onoff(val, Fl_Terminal::UNDERLINE); } // e.g. ESC[21m (TODO!)
-    void sgr_blink(bool val)     { /* NOT IMPLEMENTED */                         } // e.g. ESC[5m
+    void sgr_blink(bool val)     { (void)val; /* NOT IMPLEMENTED */              } // e.g. ESC[5m
     void sgr_inverse(bool val)   { attrib_ = onoff(val, Fl_Terminal::INVERSE);   } // e.g. ESC[7m
     void sgr_strike(bool val)    { attrib_ = onoff(val, Fl_Terminal::STRIKEOUT); } // e.g. ESC[9m
   };
@@ -928,11 +928,10 @@ protected:
 public:
   void output_translate(Fl_Terminal::OutFlags val);
   Fl_Terminal::OutFlags output_translate(void) const;
-protected:
+private:
   void handle_lf(void);
   void handle_cr(void);
   // Printing
-private:
   void handle_ctrl(char c);
   bool is_printable(char c);
   bool is_ctrl(char c);
