@@ -232,10 +232,12 @@ OPTION_USE_STD - default OFF
    or major (maybe 4.0.0) release which will default to use std::string
    and more modern C++ features.
 
-OPTION_USE_SYSTEM_LIBDECOR - default OFF
-   This option makes FLTK use package libdecor-0 to draw window titlebars
-   under Wayland. It's mainly meant for future use, when that package
-   and its plugins will be part of major Linux distributions.
+OPTION_USE_SYSTEM_LIBDECOR - default ON
+   This option makes FLTK use package libdecor-0-dev to draw window titlebars
+   under Wayland. When OFF or when this package has a version < 0.2.0, FLTK
+   uses its bundled copy of libdecor to draw window titlebars.
+   As of november 2023, version 0.2.0 of package libdecor-0-dev is available
+   only in testing distributions.
 
 Documentation options: these options are only available if `doxygen' is
    installed and found by CMake. PDF related options require also `latex'.
@@ -370,18 +372,17 @@ in the GUI (cmake-gui).
     --------------------------------------
      This uses cmake to generate + build FLTK in Release mode using nmake,
      using purely the command line (never need to open the Visual Studio IDE)
-     using Multithreaded (/MT) and optimizer level 2 (/O2):
+     using Multithreaded (/MT):
 
          mkdir build-nmake
          cd build-nmake
-         cmake -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_RELEASE="/MT /O2 /Ob2 /D NDEBUG" -DCMAKE_C_FLAGS_RELEASE="/MT /O2 /Ob2 /D NDEBUG" ..
-         nmake all
+         cmake -G "NMake Makefiles" -D CMAKE_BUILD_TYPE=Release -D FLTK_MSVC_RUNTIME_DLL=off ..
+         nmake
 
      ..which results in a colorful percentage output crawl similar to what
      we see with unix 'make'.
                                                 -erco@seriss.com
-                                                 fltk.coredev - Mar 12 2022
-
+                                                 Updated: Dec 8 2023
 
  2.5  Building under Windows with MinGW using Makefiles
 --------------------------------------------------------
@@ -578,12 +579,12 @@ find_package(FLTK REQUIRED CONFIG)
 
 add_executable(hello WIN32 MACOSX_BUNDLE hello.cxx)
 if (APPLE)
-  target_link_libraries(hello PRIVATE "-framework cocoa")
+  target_link_libraries (hello PRIVATE "-framework cocoa")
 endif (APPLE)
 
-target_include_directories(hello PRIVATE ${FLTK_INCLUDE_DIRS})
+target_include_directories (hello PRIVATE ${FLTK_INCLUDE_DIRS})
 
-target_link_libraries(hello PRIVATE fltk)
+target_link_libraries (hello PRIVATE fltk)
 ---
 
 The set(FLTK_DIR ...) command is a superhint to the find_package command.
@@ -606,8 +607,8 @@ The target_link_libraries() command is used to specify all necessary FLTK
 libraries. Thus, you may have to add fltk_images, fltk_gl, etc…
 
 Note: the variable FLTK_USE_FILE used to include another file in
-previous FLTK versions was deprecated since FLTK 1.3.4 and will be
-removed in FLTK 1.4.0 (this version) or later (maybe 1.4.1 or 1.4.2).
+previous FLTK versions was deprecated since FLTK 1.3.4 and has been
+removed in FLTK 1.4.0.
 
 
  3.3  Building a Program Using Fluid Files
@@ -642,12 +643,12 @@ add_custom_command(
 add_executable(CubeView WIN32 MACOSX_BUNDLE
     CubeMain.cxx CubeView.cxx CubeViewUI.cxx)
 
-target_include_directories(CubeView PRIVATE ${FLTK_INCLUDE_DIRS})
+target_include_directories (CubeView PRIVATE ${FLTK_INCLUDE_DIRS})
 
-target_include_directories(CubeView PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(CubeView PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories (CubeView PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories (CubeView PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(CubeView PRIVATE fltk fltk_gl)
+target_link_libraries (CubeView PRIVATE fltk fltk_gl)
 ---
 
 You can repeat the add_custom_command for each fluid file or if you
@@ -656,8 +657,8 @@ FLTK_RUN_FLUID for an example of how to run it in a loop.
 
 The two lines
 
-    target_include_directories(CubeView PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-    target_include_directories(CubeView PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+  target_include_directories (CubeView PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+  target_include_directories (CubeView PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add the current build ("binary") and source directories as include directories.
 This is necessary for the compiler to find the local header files since the
@@ -712,7 +713,7 @@ May 15 2013 - erco: small formatting tweaks, added some examples
 Feb 23 2014 - msurette: updated to reflect changes to the CMake files
 Apr 07 2015 - AlbrechtS: update use example and more docs
 Jan 31 2016 - msurette: custom command instead of fltk_wrap_ui
-Nov 01 2016 - AlbrechtS: remove deprecated FLTK_USE_FILE, add MinGW build
+Nov 01 2016 - AlbrechtS: add MinGW build
 Jul 05 2017 - matt: added instructions for macOS and Xcode
 Dec 29 2018 - AlbrechtS: add documentation option descriptions
 Apr 29 2021 - AlbrechtS: document macOS "universal apps" build setup
