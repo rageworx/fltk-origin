@@ -26,7 +26,6 @@ extern "C" {
 #include "Fl_Timeout.h"
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Tooltip.H>
-#include <FL/Fl_Printer.H>
 #include <FL/Fl_Image_Surface.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Rect.H>
@@ -2630,6 +2629,8 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
 }
 - (void)keyUp:(NSEvent *)theEvent {
   //NSLog(@"keyUp:%@",[theEvent characters]);
+  if (![[theEvent window] isKindOfClass:[FLWindow class]]) // issue #1170
+    return [super keyUp:theEvent];
   fl_lock_function();
   Fl_Window *window = (Fl_Window*)[(FLWindow*)[theEvent window] getFl_Window];
   Fl::first_window(window);
@@ -3284,7 +3285,10 @@ void Fl_Cocoa_Window_Driver::fullscreen_on() {
 #  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7
     NSWindow *nswin = fl_xid(pWindow);
 #    if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
-       if (fl_mac_os_version >= 101300) nswin = [[nswin tabGroup] selectedWindow];
+    if (fl_mac_os_version >= 101300) {
+      NSWindow *active_tab = [[nswin tabGroup] selectedWindow];
+      if (active_tab) nswin = active_tab;
+    }
 #    endif
     [nswin toggleFullScreen:nil];
 #  endif
@@ -3375,7 +3379,10 @@ void Fl_Cocoa_Window_Driver::fullscreen_off(int X, int Y, int W, int H) {
 #  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7
     NSWindow *nswin = fl_xid(pWindow);
 #    if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
-       if (fl_mac_os_version >= 101300) nswin = [[nswin tabGroup] selectedWindow];
+    if (fl_mac_os_version >= 101300) {
+      NSWindow *active_tab = [[nswin tabGroup] selectedWindow];
+      if (active_tab) nswin = active_tab;
+    }
 #    endif
     [nswin toggleFullScreen:nil];
 #  endif

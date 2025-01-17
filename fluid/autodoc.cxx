@@ -54,7 +54,7 @@ extern Fl_Double_Window *settings_window;
  @{
  */
 
-const int FL_SNAP_TO_WINDOW = 0x7f000000;
+const int FL_SNAP_TO_WINDOW = 0x01000000;
 
 static Fl_Box snap_clear_(0, 0, 0, 0);
 Fl_Widget *FL_SNAP_AREA_CLEAR = &snap_clear_;
@@ -104,6 +104,7 @@ static int convert_RGB_to_RGBA(Fl_RGB_Image *&img) {
   delete img;
   // Create the new image
   img = new Fl_RGB_Image(data, img_w, img_h, 4);
+  img->alloc_array = 1;
   return 0;
 }
 
@@ -382,22 +383,22 @@ void run_autodoc(const Fl_String &target_dir) {
   // Create a silly project that contains all widgets that we want to document
   new_project(false);
 
-  /*Fl_Type *t_func = */ add_new_widget_from_user("Function", kAddAsLastChild, false);
-  Fl_Window_Type *t_win = (Fl_Window_Type*)add_new_widget_from_user("Fl_Window", kAddAsLastChild, false);
+  /*Fl_Type *t_func = */ add_new_widget_from_user("Function", Strategy::AS_LAST_CHILD, false);
+  Fl_Window_Type *t_win = (Fl_Window_Type*)add_new_widget_from_user("Fl_Window", Strategy::AS_LAST_CHILD, false);
   t_win->label("My Main Window");
-  Fl_Widget_Type *t_grp = (Fl_Widget_Type*)add_new_widget_from_user("Fl_Group", kAddAsLastChild, false);
+  Fl_Widget_Type *t_grp = (Fl_Widget_Type*)add_new_widget_from_user("Fl_Group", Strategy::AS_LAST_CHILD, false);
   t_grp->public_ = 0;
-  Fl_Widget_Type *t_btn = (Fl_Widget_Type*)add_new_widget_from_user("Fl_Button", kAddAsLastChild, false);
+  Fl_Widget_Type *t_btn = (Fl_Widget_Type*)add_new_widget_from_user("Fl_Button", Strategy::AS_LAST_CHILD, false);
   t_btn->comment("Don't press this button!");
   t_btn->name("emergency_btn");
   ((Fl_Button*)t_btn->o)->shortcut(FL_COMMAND|'g');
-  Fl_Type *t_sldr = add_new_widget_from_user("Fl_Slider", kAddAsLastChild, false);
-  Fl_Type *t_inp = add_new_widget_from_user("Fl_Input", kAddAsLastChild, false);
-  Fl_Type *t_flx = add_new_widget_from_user("Fl_Flex", kAddAsLastChild, false);
-  Fl_Type *t_flxc = add_new_widget_from_user("Fl_Button", kAddAsLastChild, false);
+  Fl_Type *t_sldr = add_new_widget_from_user("Fl_Slider", Strategy::AS_LAST_CHILD, false);
+  Fl_Type *t_inp = add_new_widget_from_user("Fl_Input", Strategy::AS_LAST_CHILD, false);
+  Fl_Type *t_flx = add_new_widget_from_user("Fl_Flex", Strategy::AS_LAST_CHILD, false);
+  Fl_Type *t_flxc = add_new_widget_from_user("Fl_Button", Strategy::AS_LAST_CHILD, false);
   select_only(t_grp);
-  Fl_Type *t_grd = add_new_widget_from_user("Fl_Grid", kAddAsLastChild, false);
-  Fl_Type *t_grdc = add_new_widget_from_user("Fl_Button", kAddAsLastChild, false);
+  Fl_Type *t_grd = add_new_widget_from_user("Fl_Grid", Strategy::AS_LAST_CHILD, false);
+  Fl_Type *t_grdc = add_new_widget_from_user("Fl_Button", Strategy::AS_LAST_CHILD, false);
 
   widget_browser->rebuild();
   g_project.update_settings_dialog();

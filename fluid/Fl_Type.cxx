@@ -387,6 +387,11 @@ static void delete_children(Fl_Type *p) {
  don't reset the project.
  */
 void delete_all(int selected_only) {
+  if (widget_browser) {
+    if (selected_only)
+      widget_browser->save_scroll_position();
+    widget_browser->new_list();
+  }
   for (Fl_Type *f = Fl_Type::first; f;) {
     if (f->selected || !selected_only) {
       delete_children(f);
@@ -404,15 +409,21 @@ void delete_all(int selected_only) {
       g_shell_config->rebuild_shell_menu();
       g_shell_config->update_settings_dialog();
     }
-    widget_browser->hposition(0);
-    widget_browser->vposition(0);
+    if (widget_browser) {
+      widget_browser->hposition(0);
+      widget_browser->vposition(0);
+    }
     g_layout_list.remove_all(FD_STORE_PROJECT);
     g_layout_list.current_suite(0);
     g_layout_list.current_preset(0);
     g_layout_list.update_dialogs();
   }
   selection_changed(0);
-  widget_browser->redraw();
+  if (widget_browser) {
+    if (selected_only)
+      widget_browser->restore_scroll_position();
+    widget_browser->rebuild();
+  }
 }
 
 /** Update a string.
@@ -608,7 +619,7 @@ Fl_Group_Type *Fl_Type::group() {
  This methods updates the widget_browser.
 
  \param[in] p insert \c this tree as a child of \c p
- \param[in] strategy is kAddAsLastChild or kAddAfterCurrent
+ \param[in] strategy is Strategy::AS_LAST_CHILD or Strategy::AFTER_CURRENT
  */
 void Fl_Type::add(Fl_Type *anchor, Strategy strategy) {
 #if 0
@@ -626,8 +637,9 @@ void Fl_Type::add(Fl_Type *anchor, Strategy strategy) {
   int target_level = 0;   // adjust self to this new level
 
   // Find the node after our insertion position
-  switch (strategy) {
-    case kAddAsFirstChild:
+  switch (strategy.placement()) {
+    case Strategy::AS_FIRST_CHILD:
+    default:
       if (anchor == NULL) {
         target = Fl_Type::first;
       } else {
@@ -636,7 +648,7 @@ void Fl_Type::add(Fl_Type *anchor, Strategy strategy) {
         target_parent = anchor;
       }
       break;
-    case kAddAsLastChild:
+    case Strategy::AS_LAST_CHILD:
       if (anchor == NULL) {
         /* empty */
       } else {
@@ -645,7 +657,7 @@ void Fl_Type::add(Fl_Type *anchor, Strategy strategy) {
         target_parent = anchor;
       }
       break;
-    case kAddAfterCurrent:
+    case Strategy::AFTER_CURRENT:
       if (anchor == NULL) {
         target = Fl_Type::first;
       } else {
@@ -1085,11 +1097,13 @@ void Fl_Type::write_comment_c(Fd_Code_Writer& f, const char *pre)
   if (comment() && *comment()) {
     f.write_c("%s/**\n", pre);
     const char *s = comment();
-    f.write_c("%s ", pre);
+    if (*s && *s!='\n')
+      f.write_c("%s ", pre);
     while(*s) {
       if (*s=='\n') {
-        if (s[1]) {
-          f.write_c("\n%s ", pre);
+        f.write_c("\n");
+        if (s[1] && s[1]!='\n') {
+          f.write_c("%s ", pre);
         }
       } else {
         f.write_c("%c", *s); // FIXME this is much too slow!
@@ -1114,17 +1128,20 @@ void Fl_Type::write_comment_inline_c(Fd_Code_Writer& f, const char *pre)
       if (!pre) f.write_c("%s", f.indent_plus(1));
     } else {
       f.write_c("%s/*\n", pre?pre:"");
-      if (pre)
-        f.write_c("%s ", pre);
-      else
-        f.write_c("%s ", f.indent_plus(1));
+      if (*s && *s!='\n') {
+        if (pre)
+          f.write_c("%s ", pre);
+        else
+          f.write_c("%s ", f.indent_plus(1));
+      }
       while(*s) {
         if (*s=='\n') {
-          if (s[1]) {
+          f.write_c("\n");
+          if (s[1] && s[1]!='\n') {
             if (pre)
-              f.write_c("\n%s ", pre);
+              f.write_c("%s ", pre);
             else
-              f.write_c("\n%s ", f.indent_plus(1));
+              f.write_c("%s ", f.indent_plus(1));
           }
         } else {
           f.write_c("%c", *s); // FIXME this is much too slow!
